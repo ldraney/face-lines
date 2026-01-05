@@ -22,7 +22,7 @@ Chrome (localhost:5174)        server.mjs                OBS Browser Source
 ## Current Status
 - [x] Milestone 1: Camera connection (dropdown, localStorage, live feed)
 - [x] Milestone 2: Face mesh detection + line rendering (works in Chrome)
-- [ ] Milestone 3: OBS overlay via SSE (see issue #2)
+- [x] Milestone 3: OBS overlay via SSE (full face mesh rendering)
 
 ## Dev Commands
 ```bash
@@ -69,5 +69,5 @@ face-lines/
 - SSE receives landmarks, renders face lines
 - Transparent background for overlay
 
-## Known Issues
-- Issue #2: SSE data not reaching OBS (connection works, messages don't)
+## Resolved Issues
+- Issue #2: Fixed OBS rendering - server's embedded HTML had incomplete face mesh connections (411 vs 2556). Updated to use full MediaPipe FACE_LANDMARKS_TESSELATION.
