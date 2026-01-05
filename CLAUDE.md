@@ -19,7 +19,7 @@ Camera (iPhone via Camo, or webcam)
 
 ## Current Status
 - [x] Milestone 1: Camera connection (dropdown, localStorage, live feed)
-- [ ] Milestone 2: Face mesh detection + line rendering
+- [x] Milestone 2: Face mesh detection + line rendering
 
 ## File Structure
 ```
@@ -27,9 +27,9 @@ face-lines/
 ├── index.html           # Canvas + camera dropdown
 ├── src/
 │   ├── main.ts          # Entry, camera setup, main loop
-│   ├── face-mesh.ts     # MediaPipe FaceLandmarker (TODO)
-│   ├── renderer.ts      # Canvas line drawing (TODO)
-│   └── connections.ts   # Landmark connections (TODO)
+│   ├── face-mesh.ts     # MediaPipe FaceLandmarker
+│   ├── renderer.ts      # Canvas line drawing
+│   └── connections.ts   # Landmark connections
 ├── package.json
 ├── tsconfig.json
 ├── vite.config.ts
@@ -49,12 +49,12 @@ npm run dev    # localhost:5173
 - Saves preference to localStorage
 - Supports Camo (iPhone as webcam)
 
-### Face Mesh (TODO: `src/face-mesh.ts`)
+### Face Mesh (`src/face-mesh.ts`)
 - `@mediapipe/tasks-vision` FaceLandmarker
 - VIDEO mode for continuous detection
-- 468 landmarks per face
+- 468 landmarks per face, GPU-accelerated
 
-### Rendering (TODO: `src/renderer.ts`)
+### Rendering (`src/renderer.ts`)
 - Clear canvas to transparent each frame
 - Draw lines between landmark connections
 - Configurable line color/width

@@ -1,9 +1,16 @@
+import { initFaceMesh, detectFace } from './face-mesh';
+import { render } from './renderer';
+import { FACE_CONNECTIONS } from './connections';
+
 const CAMERA_STORAGE_KEY = 'face-lines-camera';
 
 const video = document.getElementById('video') as HTMLVideoElement;
+const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const cameraSelect = document.getElementById('cameraSelect') as HTMLSelectElement;
+const ctx = canvas.getContext('2d')!;
 
 let currentStream: MediaStream | null = null;
+let isRunning = false;
 
 async function enumerateCameras(): Promise<MediaDeviceInfo[]> {
   // Request permission first to get device labels
@@ -58,6 +65,33 @@ async function startCamera(deviceId: string) {
   }
 }
 
+function startDetectionLoop() {
+  if (isRunning) return;
+  isRunning = true;
+
+  function loop() {
+    if (!isRunning) return;
+
+    if (video.readyState >= 2) {
+      const landmarks = detectFace(video, performance.now());
+
+      if (landmarks) {
+        render(ctx, landmarks, FACE_CONNECTIONS, {
+          lineColor: '#00ff00',
+          lineWidth: 1
+        });
+      } else {
+        // Clear canvas when no face detected
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+
+  loop();
+}
+
 async function init() {
   const cameras = await enumerateCameras();
 
@@ -75,6 +109,20 @@ async function init() {
   cameraSelect.addEventListener('change', () => {
     startCamera(cameraSelect.value);
   });
+
+  // Initialize face mesh and start detection
+  console.log('Loading face mesh model...');
+  await initFaceMesh();
+  console.log('Starting detection loop...');
+
+  video.addEventListener('loadeddata', () => {
+    startDetectionLoop();
+  });
+
+  // If video already loaded
+  if (video.readyState >= 2) {
+    startDetectionLoop();
+  }
 }
 
 init();
