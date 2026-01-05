@@ -5,7 +5,13 @@
       "Bash(git add:*)",
       "Bash(git commit:*)",
       "Bash(gh repo create:*)",
-      "Bash(git push)"
+      "Bash(git push)",
+      "Bash(node check-obs.mjs:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell -Command \"Stop-Process -Id 28260 -Force\")",
+      "Bash(node server.mjs:*)"
     ]
   }
 }

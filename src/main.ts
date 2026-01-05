@@ -11,9 +11,18 @@ const ctx = canvas.getContext('2d')!;
 
 let currentStream: MediaStream | null = null;
 let isRunning = false;
+let ws: WebSocket | null = null;
+
+function connectWebSocket() {
+  ws = new WebSocket('ws://localhost:8081');
+  ws.onopen = () => console.log('WebSocket connected');
+  ws.onclose = () => {
+    console.log('WebSocket disconnected, reconnecting...');
+    setTimeout(connectWebSocket, 1000);
+  };
+}
 
 async function enumerateCameras(): Promise<MediaDeviceInfo[]> {
-  // Request permission first to get device labels
   try {
     const tempStream = await navigator.mediaDevices.getUserMedia({ video: true });
     tempStream.getTracks().forEach(track => track.stop());
@@ -35,7 +44,6 @@ function populateCameraSelect(cameras: MediaDeviceInfo[]) {
     cameraSelect.appendChild(option);
   });
 
-  // Restore saved preference
   const savedId = localStorage.getItem(CAMERA_STORAGE_KEY);
   if (savedId && cameras.some(c => c.deviceId === savedId)) {
     cameraSelect.value = savedId;
@@ -43,7 +51,6 @@ function populateCameraSelect(cameras: MediaDeviceInfo[]) {
 }
 
 async function startCamera(deviceId: string) {
-  // Stop existing stream
   if (currentStream) {
     currentStream.getTracks().forEach(track => track.stop());
   }
@@ -78,11 +85,16 @@ function startDetectionLoop() {
       if (landmarks) {
         render(ctx, landmarks, FACE_CONNECTIONS, {
           lineColor: '#00ff00',
-          lineWidth: 1
+          lineWidth: 3
         });
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(landmarks));
+        }
       } else {
-        // Clear canvas when no face detected
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify(null));
+        }
       }
     }
 
@@ -101,16 +113,12 @@ async function init() {
   }
 
   populateCameraSelect(cameras);
-
-  // Start with selected camera
   await startCamera(cameraSelect.value);
 
-  // Handle camera change
   cameraSelect.addEventListener('change', () => {
     startCamera(cameraSelect.value);
   });
 
-  // Initialize face mesh and start detection
   console.log('Loading face mesh model...');
   await initFaceMesh();
   console.log('Starting detection loop...');
@@ -119,10 +127,11 @@ async function init() {
     startDetectionLoop();
   });
 
-  // If video already loaded
   if (video.readyState >= 2) {
     startDetectionLoop();
   }
 }
 
+// Auto-start
+connectWebSocket();
 init();
