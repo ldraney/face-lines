@@ -11,7 +11,8 @@
       "Bash(findstr:*)",
       "Bash(taskkill:*)",
       "Bash(powershell -Command \"Stop-Process -Id 28260 -Force\")",
-      "Bash(node server.mjs:*)"
+      "Bash(node server.mjs:*)",
+      "Bash(node -e:*)"
     ]
   }
 }

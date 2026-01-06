@@ -109,7 +109,7 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(3000, () => {
+server.listen(3847, () => {
   console.log('WebSocket server: ws://localhost:8081 (Chrome sends here)');
-  console.log('Render server: http://localhost:3000 (OBS opens this)');
+  console.log('Render server: http://localhost:3847 (OBS opens this)');
 });

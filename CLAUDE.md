@@ -11,10 +11,10 @@ Live face digitizer: captures webcam/phone input, detects facial landmarks, rend
 
 ## Architecture
 ```
-Chrome (localhost:5174)        server.mjs                OBS Browser Source
+Chrome (localhost:5173)        server.mjs                OBS Browser Source
     │                              │                           │
     │ Camera → Face Detect         │                           │
-    │ ──── WebSocket:8081 ───────► │ ◄──── SSE:3000 ────────── │
+    │ ──── WebSocket:8081 ───────► │ ◄──── SSE:3847 ────────── │
     │                              │                           │
     └─ Renders locally             └─ Relays landmarks         └─ Renders overlay
 ```
@@ -27,11 +27,11 @@ Chrome (localhost:5174)        server.mjs                OBS Browser Source
 ## Dev Commands
 ```bash
 npm install
-node server.mjs   # Start WebSocket + SSE server (ports 8081 + 3000)
+node server.mjs   # Start WebSocket + SSE server (ports 8081 + 3847)
 npm run dev       # Start Vite (port 5174)
 ```
 
-OBS browser source URL: `http://localhost:3000`
+OBS browser source URL: `http://localhost:3847`
 
 ## File Structure
 ```
@@ -60,11 +60,11 @@ face-lines/
 
 ### Server (`server.mjs`)
 - WebSocket on port 8081: receives landmarks from Chrome
-- HTTP + SSE on port 3000: serves render page to OBS
+- HTTP + SSE on port 3847: serves render page to OBS
 - Relays landmarks to all SSE clients
 
 ### OBS Integration
-- OBS browser source loads `http://localhost:3000`
+- OBS browser source loads `http://localhost:3847`
 - Server serves embedded HTML with canvas + SSE client
 - SSE receives landmarks, renders face lines
 - Transparent background for overlay
