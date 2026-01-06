@@ -24,14 +24,26 @@ Chrome (localhost:5173)        server.mjs                OBS Browser Source
 - [x] Milestone 2: Face mesh detection + line rendering (works in Chrome)
 - [x] Milestone 3: OBS overlay via SSE (full face mesh rendering)
 
-## Dev Commands
-```bash
-npm install
-node server.mjs   # Start WebSocket + SSE server (ports 8081 + 3847)
-npm run dev       # Start Vite (port 5174)
-```
+## Getting Started
 
-OBS browser source URL: `http://localhost:3847`
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+2. Start the server (Terminal 1):
+   ```bash
+   node server.mjs
+   ```
+
+3. Start Vite dev server (Terminal 2):
+   ```bash
+   npm run dev
+   ```
+
+4. Open Chrome: `http://localhost:5174` (select camera, face detection starts)
+
+5. Add OBS browser source: `http://localhost:3847`
 
 ## File Structure
 ```
